@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import RegistrationTable from "../components/RegistrationTable";
+import { SIGNALR_HUB_URL } from "../config/api";
 
 const Registration = () => {
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
     const connection = new HubConnectionBuilder()
-      .withUrl("http://localhost:5179/registrationHub")
+      .withUrl(SIGNALR_HUB_URL)
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Information)
       .build();
