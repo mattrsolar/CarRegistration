@@ -7,7 +7,7 @@ const CarTable = ({ cars }) => (
         <th>ID</th>
         <th>Make</th>
         <th>Model</th>
-        <th>Registration Expiry</th>
+        {/* <th>Registration Expiry</th> */}
       </tr>
     </thead>
     <tbody>
@@ -16,7 +16,7 @@ const CarTable = ({ cars }) => (
           <td>{car.id}</td>
           <td>{car.make}</td>
           <td>{car.model}</td>
-          <td>{new Date(car.registrationExpiry).toLocaleDateString()}</td>
+          {/* <td>{new Date(car.registrationExpiry).toLocaleDateString()}</td> */}
         </tr>
       ))}
     </tbody>

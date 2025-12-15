@@ -5,33 +5,50 @@ import { API_URL } from "../config/api";
 
 const Home = () => {
   const [cars, setCars] = useState([]);
-  const [make, setMake] = useState("");
+  const [makes, setMakes] = useState([]);
   const [selectedMake, setSelectedMake] = useState("");
 
+  //Load cars (with optional make filter)
   const fetchCars = async (make = "") => {
-    const url = make ? `${API_URL}/?make=${make}` : `${API_URL}/`;
-    const response = await axios.get(url);
-    setCars(response.data);
+    try {
+      const response = await axios.get(`${API_URL}/`, {
+        params: make ? { make } : {}
+      });
+      setCars(response.data);
+    } catch (error) {
+      console.error("Error fetching cars:", error);
+    }
   };
 
-  const loadMakes = async () => {
-    const response = await axios.get(`${API_URL}/`);
-    const optionMakes = [
-      ...new Set(response.data.map(car => car.make))
-    ];
-    setMakes(optionMakes);
+  //Load unique makes for dropdown
+  const fetchMakes = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/`);
+      const uniqueMakes = [...new Set(response.data.map(car => car.make))];
+      setMakes(uniqueMakes);
+    } catch (error) {
+      console.error("Error fetching makes:", error);
+    }
   };
 
+  //Once load page, fetch cars and makes
+  useEffect(() => {
+    fetchCars();
+    fetchMakes();
+  }, []);
+
+  //Activate dropdown change
   const handleMakeChange = (e) => {
-    const value = e.target.value;
-    setSelectedMake(value);
-    fetchCars(value);
+    const make = e.target.value;
+    setSelectedMake(make);
+    fetchCars(make);
   };
 
+  // Clear filter button
   const clearFilter = () => {
     setSelectedMake("");
     fetchCars();
-  };
+  }
 
   return (
     <div style={{ padding: "20px" }}>
