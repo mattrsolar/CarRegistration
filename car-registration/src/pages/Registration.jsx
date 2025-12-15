@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
-import RegistrationTable from "../components/RegistrationTable";
 import { SIGNALR_HUB_URL } from "../config/api";
+import Datatable from "../components/table/Datatable";
+import Spinner from 'react-bootstrap/Spinner';
+
 
 const Registration = () => {
   const [cars, setCars] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const connection = new HubConnectionBuilder()
@@ -15,6 +18,7 @@ const Registration = () => {
 
     connection.on("ReceiveRegistrationStatus", data => {
       setCars(data);
+      setIsLoading(false);
     });
 
     connection.start()
@@ -27,9 +31,16 @@ const Registration = () => {
   }, []);
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="title">
       <h1>Car Registration Status</h1>
-      <RegistrationTable cars={cars} />
+      {isLoading ? 
+      (<div className="loading">
+        <p>Loading content...</p>
+        <Spinner animation="border" role="status"/> 
+      </div>)
+      
+      : null}
+      <Datatable data={cars} type="reg" />
     </div>
   );
 };
